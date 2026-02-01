@@ -2,15 +2,13 @@ using System;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerInput : MonoBehaviour
 {
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private CinemachineCamera cinemachineCamera;
-    [SerializeField] private float keyboardPanSpeed = 5;
-    [SerializeField] private float zoomSpeed = 1f;
-    [SerializeField] private float rotationSpeed = 1f;
-    [SerializeField] private float minZoomDistance = 7.5f;
+    [SerializeField] private CameraConfig cameraConfig;
 
     private CinemachineFollow cinemachineFollow;
     private float zoomStartTime;
@@ -43,7 +41,7 @@ public class PlayerInput : MonoBehaviour
             rotationStartTime = Time.time; 
         }
 
-        float rotationTime = Mathf.Clamp01((Time.time - rotationStartTime) * rotationSpeed);
+        float rotationTime = Mathf.Clamp01((Time.time - rotationStartTime) * cameraConfig.RotationSpeed);
         Vector3 targetFollowOffset;
 
         if (Keyboard.current.pageUpKey.isPressed)
@@ -91,14 +89,14 @@ public class PlayerInput : MonoBehaviour
             zoomStartTime = Time.time;
         }
 
-        float zoomTime = Mathf.Clamp01((Time.time - zoomStartTime) * zoomSpeed); 
+        float zoomTime = Mathf.Clamp01((Time.time - zoomStartTime) * cameraConfig.ZoomSpeed);
         Vector3 targetFollowOffset;
 
         if(Keyboard.current.endKey.isPressed)
         {
             targetFollowOffset = new Vector3(
                 cinemachineFollow.FollowOffset.x,
-                minZoomDistance,
+                cameraConfig.MinZoomDistance,
                 cinemachineFollow.FollowOffset.z
             );
         }
@@ -124,26 +122,62 @@ public class PlayerInput : MonoBehaviour
 
     private void HandlePanning()
     {
+       Vector2 moveAmount = GetKeyBoardMoveAmount() + GetMouseMoveAmount();
+
+        cameraTarget.position += new Vector3(moveAmount.x, 0, moveAmount.y) * Time.deltaTime;
+    }
+
+    private Vector2 GetMouseMoveAmount()
+    {
+        Vector2 moveAmount = Vector2.zero;
+
+        if(!cameraConfig.EnableEdgePan) return moveAmount;
+
+        Vector2 mousePostion = Mouse.current.position.ReadValue();
+
+        int screenWidth = Screen.width;
+        int screenHeight = Screen.height;
+
+        if ( mousePostion.x <= cameraConfig.EdgePanSize)
+        { 
+            moveAmount.x -= cameraConfig.MousePanSpeed;
+        }
+        else if ( mousePostion.x >= screenWidth - cameraConfig.EdgePanSize)
+        {
+            moveAmount.x += cameraConfig.MousePanSpeed;
+        }
+        if ( mousePostion.y <= cameraConfig.EdgePanSize)
+        {
+            moveAmount.y -= cameraConfig.MousePanSpeed;
+        }
+        else if ( mousePostion.y >= screenHeight - cameraConfig.EdgePanSize)
+        {
+            moveAmount.y += cameraConfig.MousePanSpeed;
+        }
+        return moveAmount;
+    }
+
+    private Vector2 GetKeyBoardMoveAmount()
+    {
         Vector2 moveAmount = Vector2.zero;
         
         if(Keyboard.current.upArrowKey.isPressed)
         {
-            moveAmount.y += keyboardPanSpeed;
+            moveAmount.y += cameraConfig.KeyboardPanSpeed;
         }
 
         if(Keyboard.current.downArrowKey.isPressed)
         {
-            moveAmount.y -= keyboardPanSpeed;
+            moveAmount.y -= cameraConfig.KeyboardPanSpeed;
         }
         if(Keyboard.current.leftArrowKey.isPressed)
         {
-            moveAmount.x -= keyboardPanSpeed;
+            moveAmount.x -= cameraConfig.KeyboardPanSpeed;
         }
         if(Keyboard.current.rightArrowKey.isPressed)
         {
-            moveAmount.x += keyboardPanSpeed;
+            moveAmount.x += cameraConfig.KeyboardPanSpeed;
         }
-
-        cameraTarget.position += new Vector3(moveAmount.x, 0, moveAmount.y) * Time.deltaTime;
+        return moveAmount;
     }
 }
