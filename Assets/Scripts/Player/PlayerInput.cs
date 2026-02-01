@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] private Transform cameraTarget;
+    [SerializeField] private Rigidbody cameraTarget;
     [SerializeField] private CinemachineCamera cinemachineCamera;
     [SerializeField] private CameraConfig cameraConfig;
 
@@ -124,7 +124,8 @@ public class PlayerInput : MonoBehaviour
     {
        Vector2 moveAmount = GetKeyBoardMoveAmount() + GetMouseMoveAmount();
 
-        cameraTarget.position += new Vector3(moveAmount.x, 0, moveAmount.y) * Time.deltaTime;
+        // cameraTarget.position += new Vector3(moveAmount.x, 0, moveAmount.y) * Time.deltaTime;
+         cameraTarget.linearVelocity = new Vector3(moveAmount.x, 0, moveAmount.y);
     }
 
     private Vector2 GetMouseMoveAmount()
