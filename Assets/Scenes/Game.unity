@@ -3985,7 +3985,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
-  m_LocalPosition: {x: 3.83, y: 40.58, z: -63.2}
+  m_LocalPosition: {x: 3.83, y: 60.5, z: -63.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4081,7 +4081,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTarget: {fileID: 108836891}
+  cinemachineCamera: {fileID: 1042965223}
   keyboardPanSpeed: 15
+  zoomSpeed: 1
+  minZoomDistance: 7.5
 --- !u!1001 &332197402
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12229,7 +12232,7 @@ Transform:
   m_GameObject: {fileID: 1042965222}
   serializedVersion: 2
   m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
-  m_LocalPosition: {x: 3.83, y: 40.58, z: -63.2}
+  m_LocalPosition: {x: 3.83, y: 60.5, z: -63.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12253,7 +12256,7 @@ MonoBehaviour:
     AngularDampingMode: 0
     RotationDamping: {x: 0, y: 0, z: 0}
     QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 0.08, z: -10}
+  FollowOffset: {x: 0, y: 20, z: -10}
 --- !u!1001 &1056733712
 PrefabInstance:
   m_ObjectHideFlags: 0
